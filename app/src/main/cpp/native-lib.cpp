@@ -1,10 +1,25 @@
-#include <jni.h>
-#include <string>
+#include "App/Context.h"
+#include "Drawing/SeekBarDrawer.h"
 
-extern "C" JNIEXPORT jstring JNICALL
-Java_com_example_customseekbar_MainActivity_stringFromJNI(
-        JNIEnv* env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+#include <jni.h>
+#include <android/native_window_jni.h>
+
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_customseekbar_MainActivity_nativeOnSurfaceCreated(JNIEnv *env, jobject thiz,
+                                                                   jobject surface) {
+
+    App::Context::GetInstance().GetSeekBarDrawer().OnSurfaceCreated(ANativeWindow_fromSurface(env, surface));
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_customseekbar_MainActivity_nativeOnSurfaceChanged(JNIEnv *env, jobject thiz,
+                                                                   jint width, jint height) {
+    // TODO: implement nativeOnSurfaceChanged()
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_customseekbar_MainActivity_nativeOnSurfaceDestroyed(JNIEnv *env, jobject thiz) {
+    // TODO: implement nativeOnSurfaceDestroyed()
 }
