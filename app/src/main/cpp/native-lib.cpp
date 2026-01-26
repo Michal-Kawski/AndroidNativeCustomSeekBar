@@ -1,5 +1,5 @@
 #include "App/Context.h"
-#include "Drawing/SeekBarDrawer.h"
+#include "Drawing/SkiaDrawer.h"
 
 #include <jni.h>
 #include <android/native_window_jni.h>
@@ -10,7 +10,7 @@ JNIEXPORT void JNICALL
 Java_com_example_customseekbar_MainActivity_nativeOnSurfaceCreated(JNIEnv *env, jobject thiz,
                                                                    jobject surface) {
 
-    App::Context::GetInstance().GetSeekBarDrawer().OnSurfaceCreated(ANativeWindow_fromSurface(env, surface));
+    App::Context::GetInstance().GetSkiaDrawer().OnSurfaceCreated(ANativeWindow_fromSurface(env, surface));
 }
 extern "C"
 JNIEXPORT void JNICALL

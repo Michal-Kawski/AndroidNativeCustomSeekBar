@@ -8,7 +8,7 @@
 #include <memory>
 
 namespace Drawing {
-    class SeekBarDrawer;
+    class SkiaDrawer;
 } // Drawing
 
 namespace App {
@@ -23,13 +23,13 @@ namespace App {
 
         static Context& GetInstance();
 
-        Drawing::SeekBarDrawer& GetSeekBarDrawer();
+        Drawing::SkiaDrawer& GetSkiaDrawer();
 
     private:
         Context();
         ~Context();
 
-        std::unique_ptr<Drawing::SeekBarDrawer> m_pSeekBarDrawer;
+        std::unique_ptr<Drawing::SkiaDrawer> m_pSeekBarDrawer;
     };
 
 } // App

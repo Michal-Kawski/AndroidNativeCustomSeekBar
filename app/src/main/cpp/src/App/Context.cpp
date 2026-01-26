@@ -4,13 +4,13 @@
 
 #include "../../include/App/Context.h"
 
-#include "Drawing/SeekBarDrawer.h"
+#include "Drawing/SkiaDrawer.h"
 
 namespace App {
 
     Context::Context()
     {
-        m_pSeekBarDrawer = std::make_unique<Drawing::SeekBarDrawer>();
+        m_pSeekBarDrawer = std::make_unique<Drawing::SkiaDrawer>();
     }
 
     Context::~Context()
@@ -24,7 +24,7 @@ namespace App {
         return instance;
     }
 
-    Drawing::SeekBarDrawer& Context::GetSeekBarDrawer()
+    Drawing::SkiaDrawer& Context::GetSkiaDrawer()
     {
         return *m_pSeekBarDrawer;
     }
