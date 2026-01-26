@@ -27,6 +27,7 @@ namespace Drawing {
         void DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color = Graphics::Color::RED) const;
 
         int GetWindowWidth() const;
+        int GetWindowHeight() const;
 
     private:
         bool InitSkia();

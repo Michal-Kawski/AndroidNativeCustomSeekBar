@@ -54,3 +54,13 @@ Java_com_example_customseekbar_MainActivity_nativeDestroyProgressBar(JNIEnv *env
         delete seekBar;
     }
 }
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_customseekbar_MainActivity_nativeOnSeekTouch(JNIEnv *env, jobject thiz, jlong nativeSeekBar,
+                                                              jfloat x, jfloat y) {
+    auto seekBar = reinterpret_cast<View::SeekBarView*>(nativeSeekBar);
+    if (seekBar) {
+        seekBar->OnTouchEvent(x, y);
+    }
+}

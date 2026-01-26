@@ -1,6 +1,8 @@
 package com.example.customseekbar
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -20,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         initSeekBar()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun initSeekBar() {
         val surfaceView = SurfaceView(this)
         setContentView(surfaceView)
@@ -47,6 +50,20 @@ class MainActivity : AppCompatActivity() {
                 nativeDestroyProgressBar(nativeSeekBar)
             }
         })
+
+        surfaceView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_DOWN ||
+                event.action == MotionEvent.ACTION_MOVE) {
+
+                val x = event.x
+                val y = event.y
+
+                nativeOnSeekTouch(nativeSeekBar, x, y)
+                true
+            } else {
+                false
+            }
+        }
     }
 
     /**
@@ -58,6 +75,7 @@ class MainActivity : AppCompatActivity() {
     external fun nativeOnSurfaceDestroyed()
     external fun nativeCreateProgressBar(yPosition: Float, segments: ArrayList<Segment>): Long
     external fun nativeDestroyProgressBar(nativeSeekBar: Long)
+    external fun nativeOnSeekTouch(nativeSeekBar: Long, x: Float, y: Float)
 
     companion object {
         // Used to load the 'customseekbar' library on application startup.

@@ -218,4 +218,8 @@ namespace Drawing {
         return m_width;
     }
 
+    int SkiaDrawer::GetWindowHeight() const {
+        return m_height;
+    }
+
 } // Drawing

@@ -21,15 +21,28 @@ namespace View {
         explicit SeekBarView(float yPosition);
 
         void AddProgressBarSegment(const Graphics::Segment &segment);
-        void Draw() const;
+        void Draw();
 
-        void OnTouchEvent(const float progress) const;
+        void OnTouchEvent(const float x, const float y);
         void OnDoubleTap(const TapDirection tapDirection) const;
 
     private:
+        bool HitTest(const float x, const float y) const;
+        void SetSeekBarBoundaries(const int windowWidth, const int windowHeight);
+
         friend class SeekBarViewBuilder;
         float m_yPosition = 0.0f;
         float m_progress = 0.0f;
+
+        int m_windowWidth = 0;
+        int m_windowHeight = 0;
+
+        float m_barHeightPercent = 0.02;
+        float m_barLeft = 0.0f;
+        float m_barRight = 0.0f;
+        float m_barTop = 0.0f;
+        float m_barBottom = 0.0f;
+
         std::list<Graphics::Segment> m_segments;
     };
 
