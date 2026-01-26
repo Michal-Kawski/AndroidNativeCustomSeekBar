@@ -2,7 +2,7 @@
 // Created by Michal.Kawski on 23.01.2026.
 //
 
-#include "../../include/App/Context.h"
+#include "App/Context.h"
 
 #include "Drawing/SkiaDrawer.h"
 
@@ -24,9 +24,9 @@ namespace App {
         return instance;
     }
 
-    Drawing::SkiaDrawer& Context::GetSkiaDrawer()
+    Drawing::SkiaDrawer* Context::GetSkiaDrawer()
     {
-        return *m_pSeekBarDrawer;
+        return m_pSeekBarDrawer.get();
     }
 
 } // App

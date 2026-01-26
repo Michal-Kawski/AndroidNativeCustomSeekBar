@@ -5,6 +5,8 @@
 #ifndef CUSTOMSEEKBAR_SKIADRAWER_H
 #define CUSTOMSEEKBAR_SKIADRAWER_H
 
+#include "Graphics/Graphics.h"
+
 #include <core/SkRefCnt.h>
 
 #include <cstdint>
@@ -18,17 +20,13 @@ namespace Drawing {
 
     class SkiaDrawer final {
     public:
-        enum class Color {
-            RED,
-            BLACK,
-            WHITE,
-            BLUE
-        };
-
         void OnSurfaceCreated(ANativeWindow* pWindow);
 
-        void ClearBackground(Color backgroundColor = Color::BLACK) const;
-        void DrawRectangle(float x, float y, float width, float height, Color color = Color::RED) const;
+        void ClearBackground(Graphics::Color backgroundColor = Graphics::Color::BLACK) const;
+        void Flush() const;
+        void DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color = Graphics::Color::RED) const;
+
+        int GetWindowWidth() const;
 
     private:
         bool InitSkia();

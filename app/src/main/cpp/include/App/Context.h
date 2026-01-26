@@ -23,7 +23,7 @@ namespace App {
 
         static Context& GetInstance();
 
-        Drawing::SkiaDrawer& GetSkiaDrawer();
+        Drawing::SkiaDrawer* GetSkiaDrawer(); // intention: we can hold the object through an app lifetime on cpp side when the instance is not coupled with an activity
 
     private:
         Context();

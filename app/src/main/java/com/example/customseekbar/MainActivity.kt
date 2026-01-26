@@ -5,9 +5,14 @@ import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.customseekbar.SeekBarFactory.SeekBarFactory
+import com.example.customseekbar.SeekBarFactory.Segment
 
 
 class MainActivity : AppCompatActivity() {
+
+    // Native seek bar tightly coupled life time to the activity
+    private var nativeSeekBar: Long = 0 // Native object reference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +27,9 @@ class MainActivity : AppCompatActivity() {
         surfaceView.holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 nativeOnSurfaceCreated(holder.surface)
+
+                val segments: java.util.ArrayList<Segment> = SeekBarFactory().createSeekBarSegments()
+                nativeSeekBar = nativeCreateProgressBar(0.9f, segments)
             }
 
             override fun surfaceChanged(
@@ -35,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
                 nativeOnSurfaceDestroyed()
+
+                nativeDestroyProgressBar(nativeSeekBar)
             }
         })
     }
@@ -46,6 +56,8 @@ class MainActivity : AppCompatActivity() {
     external fun nativeOnSurfaceCreated(surface: Surface)
     external fun nativeOnSurfaceChanged(width: Int, height: Int)
     external fun nativeOnSurfaceDestroyed()
+    external fun nativeCreateProgressBar(yPosition: Float, segments: ArrayList<Segment>): Long
+    external fun nativeDestroyProgressBar(nativeSeekBar: Long)
 
     companion object {
         // Used to load the 'customseekbar' library on application startup.

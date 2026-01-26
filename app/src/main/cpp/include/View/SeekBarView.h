@@ -5,9 +5,9 @@
 #ifndef CUSTOMSEEKBAR_SEEKBARVIEW_H
 #define CUSTOMSEEKBAR_SEEKBARVIEW_H
 
-#include "Color.h"
+#include "Graphics/Graphics.h"
 
-#include <vector>
+#include <list>
 
 namespace View {
 
@@ -18,25 +18,19 @@ namespace View {
             RIGHT
         };
 
-        SeekBarView(float yPosition);
+        explicit SeekBarView(float yPosition);
 
-        void AddProgressBarSegment(const float startTime, const float endTime, const Color color);
+        void AddProgressBarSegment(const Graphics::Segment &segment);
         void Draw() const;
 
         void OnTouchEvent(const float progress) const;
         void OnDoubleTap(const TapDirection tapDirection) const;
 
     private:
-        struct Segment {
-            float startTime = 0.0f;
-            float endTime = 0.0f;
-            Color color;
-        };
-
+        friend class SeekBarViewBuilder;
         float m_yPosition = 0.0f;
         float m_progress = 0.0f;
-        float m_maxProgress = 0.0f;
-        std::vector<Segment> m_segments;
+        std::list<Graphics::Segment> m_segments;
     };
 
 } // View

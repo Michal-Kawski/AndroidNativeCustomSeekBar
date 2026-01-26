@@ -2,7 +2,7 @@
 // Created by Michal.Kawski on 23.01.2026.
 //
 
-#include "../../include/Drawing/SkiaDrawer.h"
+#include "Drawing/SkiaDrawer.h"
 
 #include <android/native_window_jni.h>
 #include <android/log.h>
@@ -34,12 +34,12 @@ namespace Drawing {
     EGLDisplay eglDisplay = nullptr;
     EGLSurface eglSurface = nullptr;
 
-    SkColor DrawerColorToSkiaColor(const SkiaDrawer::Color color) {
-        static std::unordered_map<SkiaDrawer::Color, SkColor> s_skiaColorMap = {
-                {SkiaDrawer::Color::RED, SK_ColorRED},
-                {SkiaDrawer::Color::BLACK, SK_ColorBLACK},
-                {SkiaDrawer::Color::BLUE, SK_ColorBLUE},
-                {SkiaDrawer::Color::WHITE, SK_ColorWHITE}
+    SkColor DrawerColorToSkiaColor(const Graphics::Color color) {
+        static std::unordered_map<Graphics::Color, SkColor> s_skiaColorMap = {
+                {Graphics::Color::RED,   SK_ColorRED},
+                {Graphics::Color::BLACK, SK_ColorBLACK},
+                {Graphics::Color::BLUE,  SK_ColorBLUE},
+                {Graphics::Color::WHITE, SK_ColorWHITE}
         };
 
         const auto colorIt = s_skiaColorMap.find(color);
@@ -173,12 +173,12 @@ namespace Drawing {
     {
         s_pWindow = pWindow;
 
-        if (SkiaDrawer::InitSkia()) {
+        if (!SkiaDrawer::InitSkia()) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not initialize skia");
         }
     }
 
-    void SkiaDrawer::ClearBackground(SkiaDrawer::Color backgroundColor) const
+    void SkiaDrawer::ClearBackground(Graphics::Color backgroundColor) const
     {
         if (!s_pSurface || !s_pContext) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not clean the background, skia is not initialized");
@@ -189,27 +189,33 @@ namespace Drawing {
         canvas->clear(DrawerColorToSkiaColor(backgroundColor));
     }
 
-    void SkiaDrawer::DrawRectangle(float x, float y, float width, float height, SkiaDrawer::Color color) const
+    void SkiaDrawer::Flush() const
+    {
+        s_pContext->flush();
+        eglSwapBuffers(eglDisplay, eglSurface);
+    }
+
+    void SkiaDrawer::DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color) const
     {
         if (!s_pSurface || !s_pContext) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not draw rectangle, skia is not initialized");
             return;
         }
 
-        const float xMargin = static_cast<float>(width) * 0.05f;
-        const float yMargin = static_cast<float>(height) * 0.07f;
-
         SkPaint paint;
         paint.setColor(DrawerColorToSkiaColor(color));
 
         SkCanvas* canvas = s_pSurface->getCanvas();
-        canvas->drawRect(SkRect::MakeXYWH(xMargin / 2.0f,
-                                          static_cast<float>(height) - yMargin,
-                                          static_cast<float>(width) - xMargin,
-                                          static_cast<float>(height) * 0.007f), paint);
+        canvas->drawRect(SkRect::MakeXYWH(x * static_cast<float>(m_width),
+                                               static_cast<float>(m_height) * y,
+                                               static_cast<float>(m_width) * (endX - x),
+                                               static_cast<float>(m_height) * 0.01f),
+                                               paint);
+    }
 
-        s_pContext->flush();
-        eglSwapBuffers(eglDisplay, eglSurface);
+    int SkiaDrawer::GetWindowWidth() const
+    {
+        return m_width;
     }
 
 } // Drawing
