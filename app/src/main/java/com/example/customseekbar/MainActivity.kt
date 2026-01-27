@@ -31,8 +31,7 @@ class MainActivity : AppCompatActivity() {
             override fun surfaceCreated(holder: SurfaceHolder) {
                 nativeOnSurfaceCreated(holder.surface)
 
-                val segments: java.util.ArrayList<Segment> = SeekBarFactory().createSeekBarSegments()
-                nativeSeekBar = nativeCreateProgressBar(0.9f, segments)
+                nativeSeekBar = nativeCreateProgressBar(0.9f, SeekBarFactory().createSeekBarSegments())
             }
 
             override fun surfaceChanged(
@@ -52,16 +51,20 @@ class MainActivity : AppCompatActivity() {
         })
 
         surfaceView.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_DOWN ||
-                event.action == MotionEvent.ACTION_MOVE) {
-
-                val x = event.x
-                val y = event.y
-
-                nativeOnSeekTouch(nativeSeekBar, x, y)
-                true
-            } else {
-                false
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN,
+                MotionEvent.ACTION_MOVE,
+                MotionEvent.ACTION_UP,
+                MotionEvent.ACTION_CANCEL -> {
+                    nativeOnSeekTouch(
+                        nativeSeekBar,
+                        event.x,
+                        event.y,
+                        event.actionMasked
+                    )
+                    true
+                }
+                else -> false
             }
         }
     }
@@ -75,7 +78,7 @@ class MainActivity : AppCompatActivity() {
     external fun nativeOnSurfaceDestroyed()
     external fun nativeCreateProgressBar(yPosition: Float, segments: ArrayList<Segment>): Long
     external fun nativeDestroyProgressBar(nativeSeekBar: Long)
-    external fun nativeOnSeekTouch(nativeSeekBar: Long, x: Float, y: Float)
+    external fun nativeOnSeekTouch(nativeSeekBar: Long, x: Float, y: Float, actionMasked: Int)
 
     companion object {
         // Used to load the 'customseekbar' library on application startup.

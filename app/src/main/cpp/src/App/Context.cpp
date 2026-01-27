@@ -8,11 +8,6 @@
 
 namespace App {
 
-    Context::Context()
-    {
-        m_pSeekBarDrawer = std::make_unique<Drawing::SkiaDrawer>();
-    }
-
     Context::~Context()
     {
         m_pSeekBarDrawer.reset();
@@ -24,8 +19,16 @@ namespace App {
         return instance;
     }
 
+    void Context::Reset() {
+        m_pSeekBarDrawer.reset();
+    }
+
     Drawing::SkiaDrawer* Context::GetSkiaDrawer()
     {
+        if (!m_pSeekBarDrawer) {
+            m_pSeekBarDrawer = std::make_unique<Drawing::SkiaDrawer>();
+        }
+
         return m_pSeekBarDrawer.get();
     }
 

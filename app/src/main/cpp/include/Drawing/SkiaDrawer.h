@@ -24,7 +24,8 @@ namespace Drawing {
 
         void ClearBackground(Graphics::Color backgroundColor = Graphics::Color::BLACK) const;
         void Flush() const;
-        void DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color = Graphics::Color::RED) const;
+        void DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color) const;
+        void DrawCircle(const float x, const float y, const float radius, const Graphics::Color color) const;
 
         int GetWindowWidth() const;
         int GetWindowHeight() const;

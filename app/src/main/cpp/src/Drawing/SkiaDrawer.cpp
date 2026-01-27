@@ -195,7 +195,7 @@ namespace Drawing {
         eglSwapBuffers(eglDisplay, eglSurface);
     }
 
-    void SkiaDrawer::DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color) const
+    void SkiaDrawer::DrawRectangle(const float x, const float y, const float width, const float height, const Graphics::Color color) const
     {
         if (!s_pSurface || !s_pContext) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not draw rectangle, skia is not initialized");
@@ -206,11 +206,21 @@ namespace Drawing {
         paint.setColor(DrawerColorToSkiaColor(color));
 
         SkCanvas* canvas = s_pSurface->getCanvas();
-        canvas->drawRect(SkRect::MakeXYWH(x * static_cast<float>(m_width),
-                                               static_cast<float>(m_height) * y,
-                                               static_cast<float>(m_width) * (endX - x),
-                                               static_cast<float>(m_height) * 0.01f),
-                                               paint);
+        canvas->drawRect(SkRect::MakeXYWH(x, y, width, height), paint);
+    }
+
+    void SkiaDrawer::DrawCircle(const float x, const float y, const float radius, const Graphics::Color color) const
+    {
+        if (!s_pSurface || !s_pContext) {
+            __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not draw circle, skia is not initialized");
+            return;
+        }
+
+        SkPaint paint;
+        paint.setColor(DrawerColorToSkiaColor(color));
+
+        SkCanvas* canvas = s_pSurface->getCanvas();
+        canvas->drawCircle(SkPoint(x, y), radius, paint);
     }
 
     int SkiaDrawer::GetWindowWidth() const

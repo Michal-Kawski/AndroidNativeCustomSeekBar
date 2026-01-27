@@ -23,10 +23,12 @@ namespace App {
 
         static Context& GetInstance();
 
+        void Reset();
+
         Drawing::SkiaDrawer* GetSkiaDrawer(); // intention: we can hold the object through an app lifetime on cpp side when the instance is not coupled with an activity
 
     private:
-        Context();
+        Context() = default;
         ~Context();
 
         std::unique_ptr<Drawing::SkiaDrawer> m_pSeekBarDrawer;

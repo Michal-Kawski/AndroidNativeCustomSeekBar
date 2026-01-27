@@ -18,7 +18,7 @@ namespace View {
 
     SeekBarViewBuilder &SeekBarViewBuilder::AtPosition(const float yPosition)
     {
-        m_pSeeKBarView->m_yPosition = yPosition;
+        m_pSeeKBarView->m_yPositionPercentage = yPosition;
         return *this;
     }
 

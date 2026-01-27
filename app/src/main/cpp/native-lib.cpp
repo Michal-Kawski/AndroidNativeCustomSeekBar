@@ -25,7 +25,7 @@ Java_com_example_customseekbar_MainActivity_nativeOnSurfaceChanged(JNIEnv *env, 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_customseekbar_MainActivity_nativeOnSurfaceDestroyed(JNIEnv *env, jobject thiz) {
-    // TODO: implement nativeOnSurfaceDestroyed()
+    App::Context::GetInstance().Reset();
 }
 
 extern "C"
@@ -58,9 +58,9 @@ Java_com_example_customseekbar_MainActivity_nativeDestroyProgressBar(JNIEnv *env
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_customseekbar_MainActivity_nativeOnSeekTouch(JNIEnv *env, jobject thiz, jlong nativeSeekBar,
-                                                              jfloat x, jfloat y) {
+                                                              jfloat x, jfloat y, jint action) {
     auto seekBar = reinterpret_cast<View::SeekBarView*>(nativeSeekBar);
     if (seekBar) {
-        seekBar->OnTouchEvent(x, y);
+        seekBar->OnTouchEvent(x, y, action);
     }
 }
