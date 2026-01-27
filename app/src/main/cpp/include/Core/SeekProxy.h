@@ -12,27 +12,37 @@
 
 namespace Core {
 
-    class SeekProxy {
+    class IMediaController;
+
+    class ISeekProxy {
     public:
-        explicit SeekProxy(int64_t durationMs);
+        virtual ~ISeekProxy() = default;
 
-        void SetCurrentTimeMs(int64_t timeMs);
-        void SetDurationMs(int64_t durationMs);
+        virtual void SeekToNormalized(float normalized) = 0;
+        virtual void SeekToTimeMs(int64_t timeMs) = 0;
+        virtual float TimeToNormalized(int64_t timeMs) const = 0;
 
-        void SeekToNormalized(float normalized);   // from UI
-        void SeekToTimeMs(int64_t timeMs);          // from player
+        virtual void OnDoubleTap(int64_t seekDeltaMs) = 0;
+    };
 
-        float CurrentNormalized() const;
-        float TimeToNormalized(int64_t timeMs) const;
-        int64_t NormalizedToTime(float normalized) const;
+    class SeekProxy : public ISeekProxy{
+    public:
+        explicit SeekProxy(IMediaController& mediaController, int64_t durationMs);
 
-        void SetSegments(std::vector<Segment> segments);
-        const std::vector<Segment>& GetSegments() const;
+        void SeekToNormalized(float normalized) override;
+        void SeekToTimeMs(int64_t timeMs) override;
+
+        [[nodiscard]] float CurrentNormalized() const;
+        [[nodiscard]] float TimeToNormalized(int64_t timeMs) const override;
+        [[nodiscard]] int64_t NormalizedToTime(float normalized) const;
+
+        void OnDoubleTap(int64_t seekDeltaMs) override;
 
     private:
+        IMediaController& m_mediaController;
+
         int64_t m_durationMs = 0;
         int64_t m_currentTimeMs = 0;
-        std::vector<Segment> m_segments;
     };
 
 } // Core

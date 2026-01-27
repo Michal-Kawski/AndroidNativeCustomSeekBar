@@ -16,13 +16,13 @@ namespace View {
         return std::move(m_pSeeKBarView);
     }
 
-    SeekBarViewBuilder &SeekBarViewBuilder::AtPosition(const float yPosition)
+    SeekBarViewBuilder &SeekBarViewBuilder::AtPosition(const float yPositionPercentage)
     {
-        m_pSeeKBarView->m_yPositionPercentage = yPosition;
+        m_pSeeKBarView->m_yPositionPercentage = yPositionPercentage;
         return *this;
     }
 
-    SeekBarViewBuilder &SeekBarViewBuilder::AddSegments(std::vector<Graphics::Segment> segments)
+    SeekBarViewBuilder &SeekBarViewBuilder::AddSegments(std::vector<Core::Segment> segments)
     {
         m_pSeeKBarView->AddProgressBarSegments(std::move(segments));
         return *this;

@@ -1,5 +1,5 @@
 //
-// Created by Kawa on 27.01.2026.
+// Created by Michal.Kawski on 27.01.2026.
 //
 
 #ifndef CUSTOMSEEKBAR_COLOR_H

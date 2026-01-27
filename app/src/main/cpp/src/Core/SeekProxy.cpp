@@ -4,21 +4,17 @@
 
 #include "Core/SeekProxy.h"
 
+#include "Core/IMediaController.h"
+
+#include "View/SeekBarView.h"
+
 namespace Core {
 
-    SeekProxy::SeekProxy(int64_t durationMs) : m_durationMs(durationMs)
+    SeekProxy::SeekProxy(IMediaController& mediaController, int64_t durationMs) :
+        m_mediaController(mediaController),
+        m_durationMs(durationMs)
     {
 
-    }
-
-    void SeekProxy::SetCurrentTimeMs(int64_t timeMs)
-    {
-        m_currentTimeMs = timeMs;
-    }
-
-    void SeekProxy::SetDurationMs(int64_t durationMs)
-    {
-        m_durationMs = durationMs;
     }
 
     float SeekProxy::TimeToNormalized(int64_t timeMs) const {
@@ -41,20 +37,17 @@ namespace Core {
         return TimeToNormalized(m_currentTimeMs);
     }
 
-    void SeekProxy::SetSegments(std::vector<Segment> segments)
-    {
-        m_segments = std::move(segments);
-    }
-
-    const std::vector<SeekProxy::Segment>& SeekProxy::GetSegments() const
-    {
-        return m_segments;
-    }
-
     void SeekProxy::SeekToTimeMs(int64_t timeMs) {
         m_currentTimeMs = std::clamp<int64_t>(timeMs, 0LL, m_durationMs);
 
         // forward to player
-        //MediaController::instance().seekTo(m_currentTimeMs);
+        m_mediaController.SeekTo(m_currentTimeMs);
     }
+
+    void SeekProxy::OnDoubleTap(int64_t seekDeltaMs)
+    {
+        m_currentTimeMs = std::clamp<int64_t>(m_currentTimeMs + seekDeltaMs, 0LL, m_durationMs);
+        m_mediaController.SeekTo(m_currentTimeMs);
+    }
+
 } // Core

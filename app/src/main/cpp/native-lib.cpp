@@ -1,7 +1,7 @@
 #include "App/Context.h"
 #include "Drawing/SkiaDrawer.h"
-#include "View/SeekBarViewBuilder.h"
 #include "Utils/JNIUtils.h"
+#include "Core/SeekBarManager.h"
 
 #include <android/native_window_jni.h>
 #include <jni.h>
@@ -31,33 +31,37 @@ Java_com_example_customseekbar_MainActivity_nativeOnSurfaceDestroyed(JNIEnv *env
 extern "C"
 JNIEXPORT jlong JNICALL
 Java_com_example_customseekbar_MainActivity_nativeCreateProgressBar(JNIEnv *env, jobject thiz,
-                                                                    jfloat yPosition, jobject segments) {
-    View::SeekBarViewBuilder builder;
-    builder.AtPosition(0.9f); // draw the bar at 90% of the screen
-    builder.AddSegments(Utils::KotlinSegmentListToCppSegmentList(env, segments));
-
-    auto seekBar = builder.Build();
-
-    seekBar->Draw();
-    return reinterpret_cast<jlong>(seekBar.release());
+                                                                    jfloat yPosition, jlong durationMs, jobject segments) {
+    auto pSeekBarManager = std::make_unique<Core::SeekBarManager>(yPosition, durationMs, Utils::KotlinSegmentListToCppSegmentList(env, segments));
+    return reinterpret_cast<jlong>(pSeekBarManager.release());
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_customseekbar_MainActivity_nativeDestroyProgressBar(JNIEnv *env, jobject thiz,
-                                                                     jlong nativeSeekBar) {
-    auto seekBar = reinterpret_cast<View::SeekBarView*>(nativeSeekBar);
-    if (seekBar) {
-        delete seekBar;
+                                                                     jlong nativeSeekBarManager) {
+    auto seekBarManager = reinterpret_cast<Core::SeekBarManager*>(nativeSeekBarManager);
+    if (seekBarManager) {
+        delete seekBarManager;
     }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_customseekbar_MainActivity_nativeOnSeekTouch(JNIEnv *env, jobject thiz, jlong nativeSeekBar,
+Java_com_example_customseekbar_MainActivity_nativeOnSeekTouch(JNIEnv *env, jobject thiz, jlong nativeSeekBarManager,
                                                               jfloat x, jfloat y, jint action) {
-    auto seekBar = reinterpret_cast<View::SeekBarView*>(nativeSeekBar);
-    if (seekBar) {
-        seekBar->OnTouchEvent(x, y, action);
+    auto seekBarManager = reinterpret_cast<Core::SeekBarManager*>(nativeSeekBarManager);
+    if (seekBarManager) {
+        seekBarManager->OnTouchEvent(x, y, action);
+    }
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_customseekbar_MainActivity_nativeOnDoubleTap(JNIEnv *env, jobject thiz,
+                                                              jlong nativeSeekBarManager,
+                                                              jlong seekDeltaMs) {
+    auto seekBarManager = reinterpret_cast<Core::SeekBarManager*>(nativeSeekBarManager);
+    if (seekBarManager) {
+        seekBarManager->OnDoubleTap(seekDeltaMs);
     }
 }

@@ -34,12 +34,12 @@ namespace Drawing {
     EGLDisplay eglDisplay = nullptr;
     EGLSurface eglSurface = nullptr;
 
-    SkColor DrawerColorToSkiaColor(const Graphics::Color color) {
-        static std::unordered_map<Graphics::Color, SkColor> s_skiaColorMap = {
-                {Graphics::Color::RED,   SK_ColorRED},
-                {Graphics::Color::BLACK, SK_ColorBLACK},
-                {Graphics::Color::BLUE,  SK_ColorBLUE},
-                {Graphics::Color::WHITE, SK_ColorWHITE}
+    SkColor DrawerColorToSkiaColor(const Core::Color color) {
+        static std::unordered_map<Core::Color, SkColor> s_skiaColorMap = {
+                {Core::Color::RED,   SK_ColorRED},
+                {Core::Color::BLACK, SK_ColorBLACK},
+                {Core::Color::BLUE,  SK_ColorBLUE},
+                {Core::Color::WHITE, SK_ColorWHITE}
         };
 
         const auto colorIt = s_skiaColorMap.find(color);
@@ -178,7 +178,7 @@ namespace Drawing {
         }
     }
 
-    void SkiaDrawer::ClearBackground(Graphics::Color backgroundColor) const
+    void SkiaDrawer::ClearBackground(Core::Color backgroundColor) const
     {
         if (!s_pSurface || !s_pContext) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not clean the background, skia is not initialized");
@@ -195,7 +195,7 @@ namespace Drawing {
         eglSwapBuffers(eglDisplay, eglSurface);
     }
 
-    void SkiaDrawer::DrawRectangle(const float x, const float y, const float width, const float height, const Graphics::Color color) const
+    void SkiaDrawer::DrawRectangle(const float x, const float y, const float width, const float height, const Core::Color color) const
     {
         if (!s_pSurface || !s_pContext) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not draw rectangle, skia is not initialized");
@@ -209,7 +209,7 @@ namespace Drawing {
         canvas->drawRect(SkRect::MakeXYWH(x, y, width, height), paint);
     }
 
-    void SkiaDrawer::DrawCircle(const float x, const float y, const float radius, const Graphics::Color color) const
+    void SkiaDrawer::DrawCircle(const float x, const float y, const float radius, const Core::Color color) const
     {
         if (!s_pSurface || !s_pContext) {
             __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not draw circle, skia is not initialized");

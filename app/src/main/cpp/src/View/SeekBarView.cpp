@@ -11,20 +11,15 @@
 
 namespace View {
 
-    static constexpr int AMOTION_EVENT_ACTION_DOWN = 0;
-    static constexpr int AMOTION_EVENT_ACTION_UP = 1;
-    static constexpr int AMOTION_EVENT_ACTION_MOVE = 2;
-    static constexpr int AMOTION_EVENT_ACTION_CANCEL = 3;
-
     SeekBarView::SeekBarView(float yPositionPercentage) : m_yPositionPercentage(yPositionPercentage)
     {
 
     }
 
-    void SeekBarView::AddProgressBarSegments(std::vector<Graphics::Segment> segments)
+    void SeekBarView::AddProgressBarSegments(std::vector<Core::Segment> segments)
     {
         m_segments = std::move(segments);
-        std::sort(m_segments.begin(), m_segments.end(), [](const Graphics::Segment& left, const Graphics::Segment &right) {
+        std::sort(m_segments.begin(), m_segments.end(), [](const Core::Segment& left, const Core::Segment &right) {
             return left.endX <= right.endX;
         });
     }
@@ -56,15 +51,15 @@ namespace View {
         const float progressBarX = (m_barRight - m_barLeft) * m_progress;
         const float progressBarYCenter = m_yPositionPercentage * static_cast<float>(m_windowHeight);
         const float radius = 0.02f * static_cast<float>(m_windowHeight);
-        skiaDrawer->DrawCircle(progressBarX, progressBarYCenter, radius, Graphics::Color::RED);
+        skiaDrawer->DrawCircle(progressBarX, progressBarYCenter, radius, Core::Color::RED);
 
         skiaDrawer->Flush();
     }
 
     void SeekBarView::SetSeekBarBoundaries()
     {
-        Graphics::Segment firstSegment = m_segments.front();
-        Graphics::Segment lastSegment = m_segments.back();
+        Core::Segment firstSegment = m_segments.front();
+        Core::Segment lastSegment = m_segments.back();
 
         float barWidth = static_cast<float>(m_windowWidth) * (lastSegment.endX - firstSegment.startX);
         float barHeight = static_cast<float>(m_windowHeight) * m_barHeightPercent;
@@ -73,35 +68,6 @@ namespace View {
         m_barRight = lastSegment.endX * barWidth;
         m_barTop = (m_yPositionPercentage * static_cast<float>(m_windowHeight)) - (barHeight / 2.0f);
         m_barBottom = (m_yPositionPercentage * static_cast<float>(m_windowHeight)) + (barHeight / 2.0f);
-    }
-
-    void SeekBarView::OnTouchEvent(const float x, const float y, const int action)
-    {
-        switch (action) {
-            case AMOTION_EVENT_ACTION_DOWN: {
-                if (HitTest(x, y)) {
-                    m_isDragging = true;
-                    UpdateProgressFromX(x);
-                }
-                break;
-            }
-
-            case AMOTION_EVENT_ACTION_MOVE: {
-                if (m_isDragging) {
-                    UpdateProgressFromX(x);
-                }
-                break;
-            }
-
-            case AMOTION_EVENT_ACTION_UP:
-            case AMOTION_EVENT_ACTION_CANCEL: {
-                if (m_isDragging) {
-                    m_isDragging = false;
-                    UpdateProgressFromX(x);
-                }
-                break;
-            }
-        }
     }
 
     void SeekBarView::UpdateProgressFromX(float x) {
@@ -116,9 +82,21 @@ namespace View {
         Draw();
     }
 
-    void SeekBarView::OnDoubleTap(const TapDirection tapDirection) const
+    void SeekBarView::UpdateProgressToX(const float x)
     {
+        m_progress = std::clamp(x, 0.0f, 1.0f);
+        Draw();
+    }
 
+    float SeekBarView::GetXCoordProgress(float x) const
+    {
+        float width = m_barRight - m_barLeft;
+        if (width <= 0) return 0.0;
+
+        float localX = x - m_barLeft;
+        float progress = localX / width;
+
+        return std::clamp(progress, 0.0f, 1.0f);
     }
 
     bool SeekBarView::HitTest(const float x, const float y) const {

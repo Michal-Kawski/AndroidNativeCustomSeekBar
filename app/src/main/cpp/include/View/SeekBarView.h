@@ -5,7 +5,7 @@
 #ifndef CUSTOMSEEKBAR_SEEKBARVIEW_H
 #define CUSTOMSEEKBAR_SEEKBARVIEW_H
 
-#include "Graphics/Graphics.h"
+#include "Core/Segment.h"
 
 #include <vector>
 
@@ -20,21 +20,21 @@ namespace View {
 
         explicit SeekBarView(float yPositionPercentage);
 
-        void AddProgressBarSegments(std::vector<Graphics::Segment> segments);
+        void AddProgressBarSegments(std::vector<Core::Segment> segments);
 
         void Draw();
 
-        void UpdateProgressFromX(const float x);
-        void OnTouchEvent(const float x, const float y, int action);
-        void OnDoubleTap(const TapDirection tapDirection) const;
+        void UpdateProgressFromX(float x);
+        void UpdateProgressToX(float x);
+
+        [[nodiscard]] float GetXCoordProgress(float x) const;
+        [[nodiscard]] bool HitTest(float x, float y) const;
 
     private:
-        bool HitTest(const float x, const float y) const;
         void SetSeekBarBoundaries();
 
         friend class SeekBarViewBuilder;
         float m_progress = 0.0f;
-        bool  m_isDragging = false;
 
         int m_windowWidth = 0;
         int m_windowHeight = 0;
@@ -46,7 +46,7 @@ namespace View {
         float m_barTop = 0.0f;
         float m_barBottom = 0.0f;
 
-        std::vector<Graphics::Segment> m_segments;
+        std::vector<Core::Segment> m_segments;
     };
 
 } // View

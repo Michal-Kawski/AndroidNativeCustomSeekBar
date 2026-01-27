@@ -18,7 +18,7 @@ namespace View {
 
         std::unique_ptr<SeekBarView> Build();
         SeekBarViewBuilder &AtPosition(const float yPosition);
-        SeekBarViewBuilder &AddSegments(std::vector<Graphics::Segment> segments);
+        SeekBarViewBuilder &AddSegments(std::vector<Core::Segment> segments);
 
     private:
         std::unique_ptr<SeekBarView> m_pSeeKBarView;

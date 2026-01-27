@@ -5,7 +5,7 @@
 #ifndef CUSTOMSEEKBAR_SKIADRAWER_H
 #define CUSTOMSEEKBAR_SKIADRAWER_H
 
-#include "Graphics/Graphics.h"
+#include "Core/Color.h"
 
 #include <core/SkRefCnt.h>
 
@@ -22,13 +22,13 @@ namespace Drawing {
     public:
         void OnSurfaceCreated(ANativeWindow* pWindow);
 
-        void ClearBackground(Graphics::Color backgroundColor = Graphics::Color::BLACK) const;
+        void ClearBackground(Core::Color backgroundColor = Core::Color::BLACK) const;
         void Flush() const;
-        void DrawRectangle(const float x, const float y, const float endX, const float height, const Graphics::Color color) const;
-        void DrawCircle(const float x, const float y, const float radius, const Graphics::Color color) const;
+        void DrawRectangle(const float x, const float y, const float endX, const float height, const Core::Color color) const;
+        void DrawCircle(const float x, const float y, const float radius, const Core::Color color) const;
 
-        int GetWindowWidth() const;
-        int GetWindowHeight() const;
+        [[nodiscard]] int GetWindowWidth() const;
+        [[nodiscard]] int GetWindowHeight() const;
 
     private:
         bool InitSkia();

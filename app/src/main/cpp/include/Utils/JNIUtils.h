@@ -5,7 +5,7 @@
 #ifndef CUSTOMSEEKBAR_JNIUTILS_H
 #define CUSTOMSEEKBAR_JNIUTILS_H
 
-#include "Graphics/Graphics.h"
+#include "Core/Segment.h"
 
 #include <jni.h>
 
@@ -13,8 +13,8 @@
 
 namespace Utils {
 
-    Graphics::Color KotlinColorToCppColor(JNIEnv *env, jobject color);
-    std::vector<Graphics::Segment> KotlinSegmentListToCppSegmentList(JNIEnv *env, jobject segments);
+    [[nodiscard]] Core::Color KotlinColorToCppColor(JNIEnv *env, jobject color);
+    [[nodiscard]] std::vector<Core::Segment> KotlinSegmentListToCppSegmentList(JNIEnv *env, jobject segments);
 
 } // Utils
 

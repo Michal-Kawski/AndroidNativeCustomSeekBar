@@ -1,5 +1,5 @@
 //
-// Created by Kawa on 27.01.2026.
+// Created by Michal.Kawski on 27.01.2026.
 //
 
 #ifndef CUSTOMSEEKBAR_SEGMENT_H
@@ -12,9 +12,9 @@
 namespace Core
 {
     struct Segment {
-        int64_t startMs;
-        int64_t endMs;
-        Color color;
+        float startX = 0.0f;
+        float endX = 0.0f;
+        Color color = Color::BLUE;
     };
 } // Core
 
