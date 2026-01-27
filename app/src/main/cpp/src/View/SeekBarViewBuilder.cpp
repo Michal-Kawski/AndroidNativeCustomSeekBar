@@ -22,9 +22,9 @@ namespace View {
         return *this;
     }
 
-    SeekBarViewBuilder &SeekBarViewBuilder::AddSegment(const Graphics::Segment &segment)
+    SeekBarViewBuilder &SeekBarViewBuilder::AddSegments(std::vector<Graphics::Segment> segments)
     {
-        m_pSeeKBarView->AddProgressBarSegment(segment);
+        m_pSeeKBarView->AddProgressBarSegments(std::move(segments));
         return *this;
     }
 

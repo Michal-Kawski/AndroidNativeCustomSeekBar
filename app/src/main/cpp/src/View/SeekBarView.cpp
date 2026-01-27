@@ -16,14 +16,17 @@ namespace View {
     static constexpr int AMOTION_EVENT_ACTION_MOVE = 2;
     static constexpr int AMOTION_EVENT_ACTION_CANCEL = 3;
 
-    SeekBarView::SeekBarView(float yPosition) : m_yPositionPercentage(yPosition)
+    SeekBarView::SeekBarView(float yPositionPercentage) : m_yPositionPercentage(yPositionPercentage)
     {
 
     }
 
-    void SeekBarView::AddProgressBarSegment(const Graphics::Segment &segment)
+    void SeekBarView::AddProgressBarSegments(std::vector<Graphics::Segment> segments)
     {
-        m_segments.emplace_back(segment);
+        m_segments = std::move(segments);
+        std::sort(m_segments.begin(), m_segments.end(), [](const Graphics::Segment& left, const Graphics::Segment &right) {
+            return left.endX <= right.endX;
+        });
     }
 
     void SeekBarView::Draw()

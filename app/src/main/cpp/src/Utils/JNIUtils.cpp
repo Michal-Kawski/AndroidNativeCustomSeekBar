@@ -26,9 +26,9 @@ namespace Utils {
         }
     }
 
-    std::list<Graphics::Segment> KotlinSegmentListToCppSegmentList(JNIEnv *env, jobject segments)
+    std::vector<Graphics::Segment> KotlinSegmentListToCppSegmentList(JNIEnv *env, jobject segments)
     {
-        std::list<Graphics::Segment> cppSegments;
+        std::vector<Graphics::Segment> cppSegments;
 
         jclass segmentListClass = env->GetObjectClass(segments);
         jmethodID sizeMethodID = env->GetMethodID(segmentListClass, "size", "()I");

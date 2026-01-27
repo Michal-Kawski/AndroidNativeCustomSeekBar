@@ -34,10 +34,7 @@ Java_com_example_customseekbar_MainActivity_nativeCreateProgressBar(JNIEnv *env,
                                                                     jfloat yPosition, jobject segments) {
     View::SeekBarViewBuilder builder;
     builder.AtPosition(0.9f); // draw the bar at 90% of the screen
-    const auto cppSegments = Utils::KotlinSegmentListToCppSegmentList(env, segments);
-    for (const auto &segment : cppSegments) {
-        builder.AddSegment(segment);
-    }
+    builder.AddSegments(Utils::KotlinSegmentListToCppSegmentList(env, segments));
 
     auto seekBar = builder.Build();
 

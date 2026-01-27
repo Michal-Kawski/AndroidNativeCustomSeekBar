@@ -9,12 +9,12 @@
 
 #include <jni.h>
 
-#include <list>
+#include <vector>
 
 namespace Utils {
 
     Graphics::Color KotlinColorToCppColor(JNIEnv *env, jobject color);
-    std::list<Graphics::Segment> KotlinSegmentListToCppSegmentList(JNIEnv *env, jobject segments);
+    std::vector<Graphics::Segment> KotlinSegmentListToCppSegmentList(JNIEnv *env, jobject segments);
 
 } // Utils
 

@@ -7,7 +7,7 @@
 
 #include "Graphics/Graphics.h"
 
-#include <list>
+#include <vector>
 
 namespace View {
 
@@ -18,17 +18,18 @@ namespace View {
             RIGHT
         };
 
-        explicit SeekBarView(float yPosition);
+        explicit SeekBarView(float yPositionPercentage);
 
-        void AddProgressBarSegment(const Graphics::Segment &segment);
+        void AddProgressBarSegments(std::vector<Graphics::Segment> segments);
+
         void Draw();
 
+        void UpdateProgressFromX(const float x);
         void OnTouchEvent(const float x, const float y, int action);
         void OnDoubleTap(const TapDirection tapDirection) const;
 
     private:
         bool HitTest(const float x, const float y) const;
-        void UpdateProgressFromX(const float x);
         void SetSeekBarBoundaries();
 
         friend class SeekBarViewBuilder;
@@ -37,15 +38,15 @@ namespace View {
 
         int m_windowWidth = 0;
         int m_windowHeight = 0;
-
         float m_yPositionPercentage = 0.0f;
         float m_barHeightPercent = 0.015;
+
         float m_barLeft = 0.0f;
         float m_barRight = 0.0f;
         float m_barTop = 0.0f;
         float m_barBottom = 0.0f;
 
-        std::list<Graphics::Segment> m_segments;
+        std::vector<Graphics::Segment> m_segments;
     };
 
 } // View
