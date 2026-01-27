@@ -6,29 +6,28 @@
 #define CUSTOMSEEKBAR_SEEKBARVIEW_H
 
 #include "Core/Segment.h"
+#include "Drawing/Renderable.h"
 
 #include <vector>
 
 namespace View {
 
-    class SeekBarView {
+class SeekBarView : public Drawing::Renderable {
     public:
-        enum class TapDirection {
-            LEFT,
-            RIGHT
-        };
-
         explicit SeekBarView(float yPositionPercentage);
+        ~SeekBarView();
 
         void AddProgressBarSegments(std::vector<Core::Segment> segments);
 
-        void Draw();
+        void DrawSeekBar();
 
         void UpdateProgressFromX(float x);
         void UpdateProgressToX(float x);
 
         [[nodiscard]] float GetXCoordProgress(float x) const;
         [[nodiscard]] bool HitTest(float x, float y) const;
+
+        void Draw(float diffMs) override;
 
     private:
         void SetSeekBarBoundaries();

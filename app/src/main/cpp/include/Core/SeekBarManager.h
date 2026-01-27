@@ -22,12 +22,13 @@ namespace Core {
     public:
         SeekBarManager(float yPositionPercent, int64_t durationMs, std::vector<Segment> segments);
         ~SeekBarManager();
-        SeekBarManager(const SeekBarManager&) = default;
-        SeekBarManager(SeekBarManager&&) = default;
-        SeekBarManager& operator=(const SeekBarManager&) = default;
+
+        SeekBarManager(const SeekBarManager&) = delete;
+        SeekBarManager(SeekBarManager&&) noexcept = default;
+        SeekBarManager& operator=(const SeekBarManager&) = delete;
         SeekBarManager& operator=(SeekBarManager&&) = default;
 
-        void SetSeekStateListener(std::unique_ptr<ISeekStateListener> &pSeekStateListener);
+        void SetSeekStateListener(std::unique_ptr<ISeekStateListener> pSeekStateListener);
 
         void OnTouchEvent(float x, float y, int action);
         void OnDoubleTap(int64_t seekDeltaMs);
@@ -36,7 +37,6 @@ namespace Core {
 
         void SeekStart() const;
         void SeekFinish() const;
-
     private:
         std::unique_ptr<ISeekProxy> m_pSeekProxy;
         std::unique_ptr<ISeekStateListener> m_pSeekStateListener;

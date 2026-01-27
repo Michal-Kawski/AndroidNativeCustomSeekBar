@@ -25,14 +25,14 @@ namespace Core {
         seekBarViewBuilder.AtPosition(yPositionPercent);
 
         m_pSeekBarView = seekBarViewBuilder.Build();
-        m_pSeekBarView->Draw();
+        m_pSeekBarView->DrawSeekBar();
     }
 
     SeekBarManager::~SeekBarManager() {
         m_pSeekBarView.reset();
     }
 
-    void SeekBarManager::SetSeekStateListener(std::unique_ptr<ISeekStateListener> &pSeekStateListener)
+    void SeekBarManager::SetSeekStateListener(std::unique_ptr<ISeekStateListener> pSeekStateListener)
     {
         m_pSeekStateListener = std::move(pSeekStateListener);
     }
@@ -44,6 +44,7 @@ namespace Core {
         switch (action) {
             case AMOTION_EVENT_ACTION_DOWN: {
                     if (m_pSeekBarView->HitTest(x, y)) {
+                        SeekStart();
                         m_isDragging = true;
                         m_pSeekProxy->SeekToNormalized(m_pSeekBarView->GetXCoordProgress(x));
                     }
@@ -52,6 +53,7 @@ namespace Core {
 
                 case AMOTION_EVENT_ACTION_MOVE: {
                     if (m_isDragging) {
+                        SeekStart();
                         m_pSeekProxy->SeekToNormalized(m_pSeekBarView->GetXCoordProgress(x));
                     }
                     break;
@@ -59,6 +61,7 @@ namespace Core {
 
                 case AMOTION_EVENT_ACTION_UP:
                 case AMOTION_EVENT_ACTION_CANCEL: {
+                    SeekFinish();
                     if (m_isDragging) {
                         m_isDragging = false;
                         m_pSeekProxy->SeekToNormalized(m_pSeekBarView->GetXCoordProgress(x));

@@ -3,6 +3,9 @@
 //
 
 #include "Drawing/SkiaDrawer.h"
+#include "Drawing/Renderable.h"
+
+#include "Core/MetronomeService.h"
 
 #include <android/native_window_jni.h>
 #include <android/log.h>
@@ -24,6 +27,7 @@
 
 #include <unordered_map>
 
+
 namespace Drawing {
 
     ANativeWindow* SkiaDrawer::s_pWindow = nullptr;
@@ -34,7 +38,7 @@ namespace Drawing {
     EGLDisplay eglDisplay = nullptr;
     EGLSurface eglSurface = nullptr;
 
-    SkColor DrawerColorToSkiaColor(const Core::Color color) {
+    SkColor CoreColorToSkiaColor(const Core::Color color) {
         static std::unordered_map<Core::Color, SkColor> s_skiaColorMap = {
                 {Core::Color::RED,   SK_ColorRED},
                 {Core::Color::BLACK, SK_ColorBLACK},
@@ -51,9 +55,16 @@ namespace Drawing {
         return SK_ColorBLACK;
     }
 
+    SkiaDrawer::~SkiaDrawer()
+    {
+        if (m_pRenderService) {
+            m_pRenderService->Stop();
+            m_pRenderService.reset();
+        }
+    }
+
     bool SkiaDrawer::InitSkia() {
         if (m_isSkiaInitialized) {
-            __android_log_print(ANDROID_LOG_INFO, "SkiaDrawer", "Skia is already initialized");
             return true;
         }
 
@@ -173,9 +184,37 @@ namespace Drawing {
     {
         s_pWindow = pWindow;
 
-        if (!SkiaDrawer::InitSkia()) {
-            __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not initialize skia");
+        m_pRenderService = std::make_unique<Core::MetronomeService>(40);
+        m_pRenderService->AddCallback([this](float diffMs){
+            SkiaDrawer::InitSkia();
+
+            Draw(diffMs);
+        });
+
+        m_pRenderService->Start();
+    }
+
+    void SkiaDrawer::Draw(float diffMs)
+    {
+        ClearBackground();
+
+        for (auto pRenderable : m_renderables) {
+            pRenderable->Draw(diffMs);
         }
+
+        Flush();
+    }
+
+    void SkiaDrawer::AddRenderable(Drawing::Renderable *renderable)
+    {
+        if (std::find(m_renderables.begin(), m_renderables.end(), renderable) != m_renderables.end()) return;
+
+        m_renderables.push_back(renderable);
+    }
+
+    void SkiaDrawer::RemoveRenderable(Drawing::Renderable *renderable)
+    {
+        m_renderables.erase(std::remove(m_renderables.begin(), m_renderables.end(), renderable), m_renderables.end());
     }
 
     void SkiaDrawer::ClearBackground(Core::Color backgroundColor) const
@@ -186,7 +225,7 @@ namespace Drawing {
         }
 
         SkCanvas* canvas = s_pSurface->getCanvas();
-        canvas->clear(DrawerColorToSkiaColor(backgroundColor));
+        canvas->clear(CoreColorToSkiaColor(backgroundColor));
     }
 
     void SkiaDrawer::Flush() const
@@ -203,10 +242,12 @@ namespace Drawing {
         }
 
         SkPaint paint;
-        paint.setColor(DrawerColorToSkiaColor(color));
+        paint.setColor(CoreColorToSkiaColor(color));
 
         SkCanvas* canvas = s_pSurface->getCanvas();
+        canvas->save();
         canvas->drawRect(SkRect::MakeXYWH(x, y, width, height), paint);
+        canvas->restore();
     }
 
     void SkiaDrawer::DrawCircle(const float x, const float y, const float radius, const Core::Color color) const
@@ -217,10 +258,41 @@ namespace Drawing {
         }
 
         SkPaint paint;
-        paint.setColor(DrawerColorToSkiaColor(color));
+        paint.setColor(CoreColorToSkiaColor(color));
 
         SkCanvas* canvas = s_pSurface->getCanvas();
+        canvas->save();
         canvas->drawCircle(SkPoint(x, y), radius, paint);
+        canvas->restore();
+    }
+
+    void SkiaDrawer::DrawLoading(float x, float y, float radius, float rotation, Core::Color color) const
+    {
+        if (!s_pSurface || !s_pContext) {
+            __android_log_print(ANDROID_LOG_DEBUG, "SkiaDrawer", "Could not draw loading animation, skia is not initialized");
+            return;
+        }
+
+        SkPoint center(x, y);
+        
+        SkPaint paint;
+        paint.setAntiAlias(true);
+        paint.setStyle(SkPaint::kStroke_Style);
+        paint.setStrokeWidth(6);
+        paint.setColor(CoreColorToSkiaColor(color));
+
+        SkRect rect = SkRect::MakeLTRB(
+                center.x() - radius,
+                center.y() - radius,
+                center.x() + radius,
+                center.y() + radius
+        );
+
+        SkCanvas* canvas = s_pSurface->getCanvas();
+        canvas->save();
+        canvas->rotate(rotation, center.x(), center.y());
+        canvas->drawArc(rect, 0, 270, false, paint);
+        canvas->restore();
     }
 
     int SkiaDrawer::GetWindowWidth() const

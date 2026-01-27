@@ -28,6 +28,7 @@ namespace Core {
     class SeekProxy : public ISeekProxy{
     public:
         explicit SeekProxy(IMediaController& mediaController, int64_t durationMs);
+        ~SeekProxy() = default;
 
         void SeekToNormalized(float normalized) override;
         void SeekToTimeMs(int64_t timeMs) override;

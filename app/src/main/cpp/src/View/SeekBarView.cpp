@@ -6,12 +6,17 @@
 
 #include "App/Context.h"
 #include "Drawing/SkiaDrawer.h"
+#include "Drawing/Renderable.h"
 
 #include <android/log.h>
 
 namespace View {
 
     SeekBarView::SeekBarView(float yPositionPercentage) : m_yPositionPercentage(yPositionPercentage)
+    {
+    }
+
+    SeekBarView::~SeekBarView()
     {
 
     }
@@ -24,7 +29,18 @@ namespace View {
         });
     }
 
-    void SeekBarView::Draw()
+    void SeekBarView::DrawSeekBar()
+    {
+        Drawing::SkiaDrawer* skiaDrawer = App::Context::GetInstance().GetSkiaDrawer();
+        if (!skiaDrawer) {
+            __android_log_print(ANDROID_LOG_DEBUG, "SeekBarView", "Can not draw seek bar, invalid skiaDrawer");
+            return;
+        }
+
+        skiaDrawer->AddRenderable(this);
+    }
+
+    void SeekBarView::Draw(float diffMs)
     {
         Drawing::SkiaDrawer* skiaDrawer = App::Context::GetInstance().GetSkiaDrawer();
         if (!skiaDrawer) {
@@ -35,8 +51,6 @@ namespace View {
         m_windowWidth = skiaDrawer->GetWindowWidth();
         m_windowHeight = skiaDrawer->GetWindowHeight();
         SetSeekBarBoundaries();
-
-        skiaDrawer->ClearBackground();
 
         const float margin = 0.01;
         for (const auto &segment : m_segments) {
@@ -52,8 +66,6 @@ namespace View {
         const float progressBarYCenter = m_yPositionPercentage * static_cast<float>(m_windowHeight);
         const float radius = 0.02f * static_cast<float>(m_windowHeight);
         skiaDrawer->DrawCircle(progressBarX, progressBarYCenter, radius, Core::Color::RED);
-
-        skiaDrawer->Flush();
     }
 
     void SeekBarView::SetSeekBarBoundaries()
@@ -79,13 +91,13 @@ namespace View {
 
         m_progress = std::clamp(progress, 0.0f, 1.0f);
 
-        Draw();
+        DrawSeekBar();
     }
 
     void SeekBarView::UpdateProgressToX(const float x)
     {
         m_progress = std::clamp(x, 0.0f, 1.0f);
-        Draw();
+        DrawSeekBar();
     }
 
     float SeekBarView::GetXCoordProgress(float x) const

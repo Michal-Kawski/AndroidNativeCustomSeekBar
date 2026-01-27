@@ -27,6 +27,8 @@ namespace Core {
 
     class SeekStateListener : public ISeekStateListener {
     public:
+        ~SeekStateListener();
+
         void OnSeekStateChanged(SeekState state) override;
 
         void SetSeekLoadingView(std::shared_ptr<View::SeekLoadingView> pSeekLoadingView);

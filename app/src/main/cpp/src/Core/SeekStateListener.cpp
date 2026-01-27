@@ -8,6 +8,11 @@
 
 namespace Core {
 
+    SeekStateListener::~SeekStateListener()
+    {
+        m_pSeekLoadingView.reset();
+    }
+
     void SeekStateListener::OnSeekStateChanged(SeekState state)
     {
         if (!m_pSeekLoadingView) return;

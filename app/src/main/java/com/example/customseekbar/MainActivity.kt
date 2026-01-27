@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 width: Int,
                 height: Int
             ) {
-                nativeOnSurfaceChanged(width, height)
+                nativeOnSurfaceChanged(nativeSeekBarManager, width, height)
             }
 
             override fun surfaceDestroyed(holder: SurfaceHolder) {
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
      * which is packaged with this application.
      */
     external fun nativeOnSurfaceCreated(surface: Surface)
-    external fun nativeOnSurfaceChanged(width: Int, height: Int)
+    external fun nativeOnSurfaceChanged(nativeSeekBarManager: Long, width: Int, height: Int)
     external fun nativeOnSurfaceDestroyed()
     external fun nativeCreateProgressBar(yPosition: Float, durationMs: Long, segments: ArrayList<Segment>): Long
     external fun nativeDestroyProgressBar(nativeSeekBarManager: Long)
