@@ -19,6 +19,35 @@ Ostatni commit w repozytorium Skia:
 Skompilowane biblioteki skia dostępne są na moim prywatnym dysku google-a:
 https://drive.google.com/drive/folders/1F_hUjUi3jfMpcD3aSvkZcDtBkYxvV6CP?usp=sharing
 
+#### Błąd linkowania
+W przypadku błędu budowania spowodowanego brakiem jednego z plików źródłowych w linkerze można spróbować zastosować poniższego diff-a:
+```
+PS C:\Users\Kawa\Desktop\CustomSeekBar> git diff app/src/main/cpp/CMakeLists.txt
+diff --git a/app/src/main/cpp/CMakeLists.txt b/app/src/main/cpp/CMakeLists.txt
+index b8f879f..2750943 100644
+--- a/app/src/main/cpp/CMakeLists.txt
++++ b/app/src/main/cpp/CMakeLists.txt
+@@ -22,7 +22,17 @@ set(CPP_SRC ${CPP_ROOT}/src)
+
+ # ---- Find all source files ----
+ file(GLOB_RECURSE CPP_SOURCES
+-        ${CPP_SRC}/*.cpp
++        ${CPP_SRC}/native-lib.cpp
++        ${CPP_SRC}/App/Context.cpp
++        ${CPP_SRC}/Core/MetronomeService.cpp
++        ${CPP_SRC}/Core/SeekBarManager.cpp
++        ${CPP_SRC}/Core/SeekProxy.cpp
++        ${CPP_SRC}/Core/SeekStateListener.cpp
++        ${CPP_SRC}/Drawing/SkiaDrawer.cpp
++        ${CPP_SRC}/Utils/JNIUtils.cpp
++        ${CPP_SRC}/View/SeekBarView.cpp
++        ${CPP_SRC}/View/SeekBarViewBuilder.cpp
++        ${CPP_SRC}/View/SeekLoadingView.cpp
+ )
+
+ # ---- Skia paths ----
+```
+
 ### Kompilacja testow:
 Niestety nie miałem wystarczająco dużo czasu żeby napisac wszystkie testy. Zrobilem minimalny zarys testow, który można skompilować za pomocą komend:
 Build tests
