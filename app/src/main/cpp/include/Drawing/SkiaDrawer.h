@@ -10,12 +10,11 @@
 #include "Core/Color.h"
 #include "Core/MetronomeService.h"
 
-#include <core/SkRefCnt.h>
-
 #include <cstdint>
 #include <memory>
 #include <vector>
 
+template <typename T> class sk_sp;
 class ANativeWindow;
 class GrDirectContext;
 class SkSurface;

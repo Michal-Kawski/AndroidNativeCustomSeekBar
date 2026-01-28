@@ -8,6 +8,8 @@
 
 #include "View/SeekBarView.h"
 
+#include <algorithm>
+
 namespace Core {
 
     SeekProxy::SeekProxy(IMediaController& mediaController, int64_t durationMs) :
@@ -30,11 +32,6 @@ namespace Core {
     void SeekProxy::SeekToNormalized(float normalized) {
         const int64_t targetMs = NormalizedToTime(normalized);
         SeekToTimeMs(targetMs);
-    }
-
-    float SeekProxy::CurrentNormalized() const
-    {
-        return TimeToNormalized(m_currentTimeMs);
     }
 
     void SeekProxy::SeekToTimeMs(int64_t timeMs) {

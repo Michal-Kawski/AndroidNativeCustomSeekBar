@@ -17,6 +17,7 @@ namespace Core
         virtual void SeekToNormalized(float normalized) = 0;
         virtual void SeekToTimeMs(int64_t timeMs) = 0;
         virtual float TimeToNormalized(int64_t timeMs) const = 0;
+        virtual int64_t NormalizedToTime(float normalized) const = 0;
 
         virtual void OnDoubleTap(int64_t seekDeltaMs) = 0;
     };

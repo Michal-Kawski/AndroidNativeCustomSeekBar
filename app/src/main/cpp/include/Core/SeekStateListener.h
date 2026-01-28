@@ -5,6 +5,8 @@
 #ifndef CUSTOMSEEKBAR_SEEKSTATELISTENER_H
 #define CUSTOMSEEKBAR_SEEKSTATELISTENER_H
 
+#include "ISeekStateListener.h"
+
 #include <memory>
 
 namespace View
@@ -13,17 +15,6 @@ namespace View
 }
 
 namespace Core {
-
-    enum class SeekState {
-        STARTED,
-        FINISHED
-    };
-
-    class ISeekStateListener {
-    public:
-        virtual ~ISeekStateListener() = default;
-        virtual void OnSeekStateChanged(SeekState state) = 0;
-    };
 
     class SeekStateListener : public ISeekStateListener {
     public:

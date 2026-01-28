@@ -12,6 +12,8 @@ namespace Core
     class IMediaController
     {
     public:
+        virtual ~IMediaController() = default;
+
         virtual void SeekTo(int64_t currentTimeMs) = 0;
     };
 } // Core

@@ -8,7 +8,7 @@
 
 #include <functional>
 #include <thread>
-
+#include <atomic>
 
 namespace Core {
 

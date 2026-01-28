@@ -24,9 +24,8 @@ namespace Core {
         void SeekToNormalized(float normalized) override;
         void SeekToTimeMs(int64_t timeMs) override;
 
-        [[nodiscard]] float CurrentNormalized() const;
         [[nodiscard]] float TimeToNormalized(int64_t timeMs) const override;
-        [[nodiscard]] int64_t NormalizedToTime(float normalized) const;
+        [[nodiscard]] int64_t NormalizedToTime(float normalized) const override;
 
         void OnDoubleTap(int64_t seekDeltaMs) override;
 

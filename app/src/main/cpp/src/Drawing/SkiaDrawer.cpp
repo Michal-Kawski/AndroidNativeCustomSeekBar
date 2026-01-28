@@ -13,6 +13,7 @@
 #include <core/SkCanvas.h>
 #include <core/SkColorSpace.h>
 #include <core/SkSurface.h>
+#include <core/SkRefCnt.h>
 
 #include <gpu/ganesh/GrBackendSurface.h>
 #include <gpu/ganesh/SkSurfaceGanesh.h>

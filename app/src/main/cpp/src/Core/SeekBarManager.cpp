@@ -9,7 +9,9 @@
 #include "View/SeekBarViewBuilder.h"
 #include "View/SeekBarView.h"
 
+#ifdef __ANDROID__
 #include <android/log.h>
+#endif
 
 namespace Core {
 
@@ -70,7 +72,10 @@ namespace Core {
                     }
                     break;
                     default:
+                        #ifdef __ANDROID__
                         __android_log_print(ANDROID_LOG_DEBUG, "SeekBarManager", "Action not recognized");
+                        #endif
+                        break;
                 }
             }
     }

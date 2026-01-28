@@ -5,12 +5,12 @@
 #ifndef CUSTOMSEEKBAR_ISKIADRAWERFACTORY_H
 #define CUSTOMSEEKBAR_ISKIADRAWERFACTORY_H
 
-#include "ISkiaDrawer.h"
-
 #include <memory>
 
 namespace Drawing
 {
+    class ISkiaDrawer;
+
     class ISkiaDrawerFactory
     {
     public:
