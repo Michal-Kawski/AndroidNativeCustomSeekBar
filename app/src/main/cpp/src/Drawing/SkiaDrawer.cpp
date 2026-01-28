@@ -55,6 +55,12 @@ namespace Drawing {
         return SK_ColorBLACK;
     }
 
+    SkiaDrawer &SkiaDrawer::GetInstance()
+    {
+        static SkiaDrawer skiaDrawer;
+        return skiaDrawer;
+    }
+
     SkiaDrawer::~SkiaDrawer()
     {
         if (m_pRenderService) {

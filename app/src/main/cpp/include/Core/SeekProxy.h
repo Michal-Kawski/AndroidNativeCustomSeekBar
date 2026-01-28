@@ -6,6 +6,7 @@
 #define CUSTOMSEEKBAR_SEEKPROXY_H
 
 #include "Segment.h"
+#include "ISeekProxy.h"
 
 #include <cstdint>
 #include <vector>
@@ -14,21 +15,11 @@ namespace Core {
 
     class IMediaController;
 
-    class ISeekProxy {
-    public:
-        virtual ~ISeekProxy() = default;
-
-        virtual void SeekToNormalized(float normalized) = 0;
-        virtual void SeekToTimeMs(int64_t timeMs) = 0;
-        virtual float TimeToNormalized(int64_t timeMs) const = 0;
-
-        virtual void OnDoubleTap(int64_t seekDeltaMs) = 0;
-    };
 
     class SeekProxy : public ISeekProxy{
     public:
         explicit SeekProxy(IMediaController& mediaController, int64_t durationMs);
-        ~SeekProxy() = default;
+        ~SeekProxy() override = default;
 
         void SeekToNormalized(float normalized) override;
         void SeekToTimeMs(int64_t timeMs) override;

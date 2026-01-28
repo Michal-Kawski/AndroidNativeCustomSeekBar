@@ -5,13 +5,11 @@
 #include "App/Context.h"
 
 #include "Drawing/SkiaDrawer.h"
+#include "Core/SeekProxyFactory.h"
+
+#include <android/log.h>
 
 namespace App {
-
-    Context::~Context()
-    {
-        m_pSeekBarDrawer.reset();
-    }
 
     Context& Context::GetInstance()
     {
@@ -19,17 +17,30 @@ namespace App {
         return instance;
     }
 
-    void Context::Reset() {
-        m_pSeekBarDrawer.reset();
+    void Context::SetComponentFactory(std::unique_ptr<IComponentFactory> pComponentFactory)
+    {
+        m_pComponentFactory = std::move(pComponentFactory);
     }
 
-    Drawing::SkiaDrawer* Context::GetSkiaDrawer()
+    IComponentFactory* Context::GetComponentFactory()
     {
-        if (!m_pSeekBarDrawer) {
-            m_pSeekBarDrawer = std::make_unique<Drawing::SkiaDrawer>();
+        return m_pComponentFactory.get();
+    }
+
+    Drawing::ISkiaDrawer* Context::GetSkiaDrawer()
+    {
+        if (!m_pComponentFactory) {
+            __android_log_print(ANDROID_LOG_DEBUG, "Context", "Can not get SkiaDrawer, invalid ComponentFactory");
+            return nullptr;
         }
 
-        return m_pSeekBarDrawer.get();
+        auto pSkiaDrawerFactory = m_pComponentFactory->GetSkiaDrawerFactory();
+        if (!pSkiaDrawerFactory) {
+            __android_log_print(ANDROID_LOG_DEBUG, "Context", "Can not get SkiaDrawer, invalid SkiaDrawerFactory");
+            return nullptr;
+        }
+
+        return &pSkiaDrawerFactory->GetInstance();
     }
 
 } // App

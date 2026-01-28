@@ -31,25 +31,25 @@ namespace View {
 
     void SeekBarView::DrawSeekBar()
     {
-        Drawing::SkiaDrawer* skiaDrawer = App::Context::GetInstance().GetSkiaDrawer();
-        if (!skiaDrawer) {
+        auto pSkiaDrawer = App::Context::GetInstance().GetSkiaDrawer();
+        if (!pSkiaDrawer) {
             __android_log_print(ANDROID_LOG_DEBUG, "SeekBarView", "Can not draw seek bar, invalid skiaDrawer");
             return;
         }
 
-        skiaDrawer->AddRenderable(this);
+        pSkiaDrawer->AddRenderable(this);
     }
 
     void SeekBarView::Draw(float diffMs)
     {
-        Drawing::SkiaDrawer* skiaDrawer = App::Context::GetInstance().GetSkiaDrawer();
-        if (!skiaDrawer) {
+        auto pSkiaDrawer = App::Context::GetInstance().GetSkiaDrawer();
+        if (!pSkiaDrawer) {
             __android_log_print(ANDROID_LOG_DEBUG, "SeekBarView", "Can not draw seek bar, invalid skiaDrawer");
             return;
         }
 
-        m_windowWidth = skiaDrawer->GetWindowWidth();
-        m_windowHeight = skiaDrawer->GetWindowHeight();
+        m_windowWidth = pSkiaDrawer->GetWindowWidth();
+        m_windowHeight = pSkiaDrawer->GetWindowHeight();
         SetSeekBarBoundaries();
 
         const float margin = 0.01;
@@ -59,13 +59,13 @@ namespace View {
             const float x = (segment.startX + margin) * static_cast<float>(m_windowWidth);
             const float y = m_yPositionPercentage * static_cast<float>(m_windowHeight) - height/2.0f;
 
-            skiaDrawer->DrawRectangle(x, y, width, height, segment.color);
+            pSkiaDrawer->DrawRectangle(x, y, width, height, segment.color);
         }
 
         const float progressBarX = (m_barRight - m_barLeft) * m_progress;
         const float progressBarYCenter = m_yPositionPercentage * static_cast<float>(m_windowHeight);
         const float radius = 0.02f * static_cast<float>(m_windowHeight);
-        skiaDrawer->DrawCircle(progressBarX, progressBarYCenter, radius, Core::Color::RED);
+        pSkiaDrawer->DrawCircle(progressBarX, progressBarYCenter, radius, Core::Color::RED);
     }
 
     void SeekBarView::SetSeekBarBoundaries()

@@ -4,6 +4,8 @@
 
 #include "Core/SeekBarManager.h"
 
+#include "App/Context.h"
+
 #include "View/SeekBarViewBuilder.h"
 #include "View/SeekBarView.h"
 
@@ -18,7 +20,7 @@ namespace Core {
 
 
     SeekBarManager::SeekBarManager(float yPositionPercent, int64_t durationMs, std::vector<Segment> segments) :
-            m_pSeekProxy(std::make_unique<SeekProxy>(*this, durationMs))
+            m_pSeekProxy(App::Context::GetInstance().GetComponentFactory()->GetSeekProxyFactory()->Create(*this, durationMs))
     {
         View::SeekBarViewBuilder seekBarViewBuilder;
         seekBarViewBuilder.AddSegments(std::move(segments));

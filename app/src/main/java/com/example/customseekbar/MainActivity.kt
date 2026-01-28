@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     fun initSeekBar() {
+        nativeInit();
+
         val surfaceView = SurfaceView(this)
         setContentView(surfaceView)
 
@@ -88,6 +90,7 @@ class MainActivity : AppCompatActivity() {
      * A native method that is implemented by the 'customseekbar' native library,
      * which is packaged with this application.
      */
+    external fun nativeInit()
     external fun nativeOnSurfaceCreated(surface: Surface)
     external fun nativeOnSurfaceChanged(nativeSeekBarManager: Long, width: Int, height: Int)
     external fun nativeOnSurfaceDestroyed()

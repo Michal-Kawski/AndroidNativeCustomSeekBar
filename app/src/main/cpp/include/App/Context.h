@@ -5,11 +5,17 @@
 #ifndef CUSTOMSEEKBAR_CONTEXT_H
 #define CUSTOMSEEKBAR_CONTEXT_H
 
+#include "IComponentFactory.h"
+
 #include <memory>
 
 namespace Drawing {
-    class SkiaDrawer;
+    class ISkiaDrawer;
 } // Drawing
+
+namespace Core {
+    class ISeekProxyFactory;
+} // Core
 
 namespace App {
 
@@ -23,15 +29,15 @@ namespace App {
 
         static Context& GetInstance();
 
-        void Reset();
+        void SetComponentFactory(std::unique_ptr<IComponentFactory> pComponentFactory);
+        IComponentFactory* GetComponentFactory();
 
-        Drawing::SkiaDrawer* GetSkiaDrawer(); // intention: we can hold the object through an app lifetime on cpp side when the instance is not coupled with an activity
-
+        Drawing::ISkiaDrawer* GetSkiaDrawer();
     private:
         Context() = default;
-        ~Context();
+        ~Context() = default;
 
-        std::unique_ptr<Drawing::SkiaDrawer> m_pSeekBarDrawer;
+        std::unique_ptr<IComponentFactory> m_pComponentFactory;
     };
 
 } // App
